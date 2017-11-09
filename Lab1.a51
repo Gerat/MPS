@@ -7,7 +7,7 @@
 init:
 		clr psw.3
 		clr psw.4
-		mov R2, #8h
+		mov R0, #8h
 		mov IE, #10010100b
 		mov IP, #00010100b
 		mov TCON, #0h
@@ -41,23 +41,30 @@ init:
 main:
 		acall calc
 		mov 0C0h, #0h
-		//acall timertb // timer T
+		acall timertb // timer T
 		mov 0C0h, a
 		mov 0C0h.4, c
-		//acall timertl // timer t
+		acall timertl // timer t
 		mov 0C0h, #0h
+		acall jinc
 		ajmp main // loop
 		
 inter1:
+		movx a, @DPTR
+		setb acc.0
+		movx @DPTR, a
 		reti
 		
 	
 serint:
+		movx a, @DPTR
+		clr acc.0
+		movx @DPTR, a
+		clr RI
 		reti
 		
 calc:
 		movx a, @DPTR
-		//inc dptr
 		mov b, a
 		anl b, #1h
 		mov c, acc.1
@@ -68,54 +75,67 @@ calc:
 		xrl a, b
 		rrc a
 		movx a, @DPTR
-		inc DPTR
-		djnz R2, calc1 
-		mov R2, #8h
-		mov DPTR, #8000h
 calc1:
+		ret
+		
+jinc:
+		inc DPTR
+		djnz R0, jinc1 
+		mov R0, #8h
+		mov DPTR, #8000h
+jinc1:
 		ret
 		
 		//timer t
 timertl:
-		mov R3, #2d
+		mov R1, #8d
 timertl1:
-		mov R4, #255d
-		djnz R4, $
-		djnz R3, timertl1
-		mov R4, #40d
-		djnz R4, $
+		mov R2, #250d
+timertl2:
+		mov R3, #250d
+		djnz R3, $
+		djnz R2, timertl2
+		djnz R1, timertl1
+		mov R2, #200d
+timertl3:
+		mov R3, 250d
+		djnz R3, $
+		djnz R2, timertl3
 		ret
 		
 		//timer T
 timertb:
-		mov R3, #13d
+		mov R1, #27d
 timertb1:
-		mov R4, #255d
-		djnz R4, $
-		djnz R3, timertb1
-		mov R4, #85d
-		djnz R4, $
+		mov R2, #250d
+timertb2:
+		mov R3, #250d
+		djnz R3, $
+		djnz R2, timertb2
+		djnz R1, timertb1
 		ret
 		
-/*		timertl:
-		mov R3, #2d
-timertl1:
-		mov R4, #255d
-		djnz R4, $
-		djnz R3, timertl1
-		mov R4, #40d
-		djnz R4, $
-		ret
-		//timer T
-timertb:
-		mov R3, #13d
-timertb1:
-		mov R4, #255d
-		djnz R4, $
-		djnz R3, timertb1
-		mov R4, #85d
-		djnz R4, $
-		ret
-*////
 		end
+		/*
+		timertl:
+		mov R3, #2d
+timertl1:
+		mov R4, #255d
+		djnz R4, $
+		djnz R3, timertl1
+		mov R4, #40d
+		djnz R4, $
+		ret
+		
+		//timer T
+timertb:
+		mov R3, #13d
+timertb1:
+		mov R4, #255d
+		djnz R4, $
+		djnz R3, timertb1
+		mov R4, #85d
+		djnz R4, $
+		ret
+		*/
 		
