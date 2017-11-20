@@ -10,7 +10,7 @@ init:
 		mov IP, #00000001b
 		mov TCON, #0h
 		mov TMOD, #00000011b
-		mov 0C0h, #0010000b
+		mov 0C0h, #00100000b
 		mov dptr, #8000h
 		mov a, #0h
 		movx @DPTR, a
