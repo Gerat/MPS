@@ -40,12 +40,14 @@ init:
 main:
 		acall calc
 		mov 0C0h, #0h
-		acall timertb // timer T
+		//acall timertb // timer T
+		acall countb
 		mov 0C0h, a
 		mov c, b.0
 		mov 0C0h.4, c
 		mov b, #0h
-		acall timertl // timer t
+		//acall timertl // timer t
+		acall countl
 		mov 0C0h, #0h
 		acall jinc
 		ajmp main // loop
@@ -83,24 +85,27 @@ jinc1:
 		ret
 		
 timertl:
-		mov R1, #130d
+		mov R2, #10d
 timertl1:
-		mov TL0, #155d
-		setb TR0
+		mov R1, 255d
 timertl2:
-		jbc TF0, timertl3
-		sjmp timertl2
+		mov TL0, #255d
+		setb TR0
 timertl3:
+		jbc TF0, timertl4
+		sjmp timertl3
+timertl4:
 		clr TR0
-		djnz R1, timertl1
+		djnz R1, timertl2
+		djnz R2, timertl1
 		ret
 		
 timertb:
-		mov R2, #3d
+		mov R2, #255d
 timertb1:
-		mov R1, #134d
+		mov R1, #255d
 timertb2:
-		mov TL0, #155d
+		mov TL0, #255d
 		setb TR0
 timertb3:
 		jbc TF0, timertb4
@@ -109,6 +114,25 @@ timertb4:
 		clr TR0
 		djnz R1, timertb2
 		djnz R2, timertb1
+		ret
+		
+countl:
+		mov R3, #2d
+countl1:
+		acall timertb
+		djnz R3, countl1
+		acall timertl
+		ret
+		
+countb:
+		mov R3, #6d
+countb1:
+		acall timertb
+		djnz R3, countb1
+		mov R3, #8d
+countb2:
+		acall timertl
+		djnz R3, countb2
 		ret
 		
 		end
