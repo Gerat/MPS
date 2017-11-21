@@ -50,6 +50,11 @@ main:
 		ajmp main // loop
 		
 inter1:
+		mov R4, DPL
+		cjne R4, #08h, inter11
+		dec R4
+		mov DPL, R4
+inter11:
 		movx a, @DPTR
 		setb acc.0
 		movx @DPTR, a
@@ -80,7 +85,8 @@ calc1:
 		
 jinc:
 		inc DPTR
-		djnz R0, jinc1 
+		djnz R0, jinc1
+		acall timertb
 		mov R0, #8h
 		mov DPTR, #8000h
 jinc1:
@@ -116,26 +122,3 @@ timertb2:
 		ret
 		
 		end
-		/*
-		timertl:
-		mov R3, #2d
-timertl1:
-		mov R4, #255d
-		djnz R4, $
-		djnz R3, timertl1
-		mov R4, #40d
-		djnz R4, $
-		ret
-		
-		//timer T
-timertb:
-		mov R3, #13d
-timertb1:
-		mov R4, #255d
-		djnz R4, $
-		djnz R3, timertb1
-		mov R4, #85d
-		djnz R4, $
-		ret
-		*/
-		
