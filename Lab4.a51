@@ -7,25 +7,13 @@
 init:
 		clr psw.3
 		clr psw.4
-		mov R0, #8h
+		mov R0, #4h
 		mov IE, #10000011b
 		mov IP, #00000001b
 		mov TCON, #0h
 		mov TMOD, #00000011b
 		mov 0C0h, #00100000b
 		mov dptr, #8000h
-		mov a, #0h
-		movx @DPTR, a
-		inc dptr
-		mov a, #2h
-		movx @DPTR, a
-		inc dptr
-		mov a, #5h
-		movx @DPTR, a
-		inc dptr
-		mov a, #6h
-		movx @DPTR, a
-		inc dptr
 		mov a, #8h
 		movx @DPTR, a
 		inc dptr
@@ -58,7 +46,7 @@ main:
 		
 inter0:
 		mov R3, DPL
-		cjne R3, #08h, inter01
+		cjne R3, #04h, inter01
 		dec R3
 		mov DPL, R3
 inter01:
@@ -69,7 +57,9 @@ inter01:
 		reti
 		
 tc0:
+		mov Tl0, #10d
 		djnz R2, tc01
+		mov R2, #200d
 		djnz R1, tc01
 		clr TR0
 tc01:
@@ -95,19 +85,19 @@ calc1:
 jinc:
 		inc DPTR
 		djnz R0, jinc1
-		mov R0, #8h
+		mov R0, #4h
 		mov DPTR, #8000h
 jinc1:
 		ret
 		
 starttb:
-		mov R1, #52d
-		mov R2, #255d
+		mov R1, #68d
+		mov R2, #200d
 		ret
 		
 starttl:
-		mov R1, #17d
-		mov R2, #253d;253d
+		mov R1, #22d
+		mov R2, #200d
 		ret
 		
 		end
