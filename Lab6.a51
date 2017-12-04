@@ -33,6 +33,7 @@ calc:
 		mov acc.0, c
 		mov R0, a
 		mov 0C0h, a
+		acall reset
 		setb EA
 		ret
 		
@@ -46,6 +47,13 @@ kit:
 		mov b, R3
 		mov c, b.0
 		mov acc.1, c
+		ret
+		
+reset:
+		mov R0, #0h
+		mov R1, #0h
+		mov R2, #0h
+		mov R3, #0h
 		ret
 		
 inter1:
@@ -67,6 +75,44 @@ ksh:
 		cjne a, #11011010b, exit
 		clr EA
 exit:
+		reti
+		
+com:
+		mov R4, a
+		mov DPTR, #7FF6h
+wbf:
+		movx a, @DPTR
+		anl a, #80h
+		jnz BF
+		mov DPTR, #7FF4h
+		mov a, R4
+		movx @DPTR, a
+		reti
+		
+char:
+		mov R0, a
+		mov DPTR, #7FF6h
+bf:
+		movx a, @DPTR
+		anl a, #80h
+		jnz bf1
+		mov DPTR, #7FF5h
+		mov a, R4
+		movx @DPTR, a
+		ret
+out:
+		mov a, #38h
+		acall com
+		mov a, #0Ch
+		acall com
+		mov a, #06h
+		acall com
+		mov a, #02h
+		acall com
+		mov a, #01h
+		acall com
+		mov a, #31h
+		acall char
 		reti
 		
 		end
